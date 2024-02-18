@@ -11,3 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import yaml
+
+def load_config(config_path='config.yaml'):
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config
+
+# Assuming your __init__.py is in the root of your repo where config.yaml is located
+config = load_config()
+
+# Now you can use the config dictionary throughout your package
+database_config = config['database']
+streamlit_port = config['streamlit']['port']
+api_key = config['api']['key']
