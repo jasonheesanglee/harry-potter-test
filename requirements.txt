@@ -17,7 +17,7 @@ langchain
 transformers
 sentence-transformers
 accelerate
-chromadb
+chromadb==0.3.29
 tqdm
 bitsandbytes
 huggingface
