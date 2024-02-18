@@ -1,10 +1,10 @@
-sqlite3 >= 3.35.0
 altair
 numpy < 2
 pandas
 pydeck
 streamlit
 fastapi
+langchain-community
 uvicorn
 tiktoken
 kaleido
