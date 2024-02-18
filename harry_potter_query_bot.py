@@ -31,36 +31,68 @@ import tiktoken
 import chromadb
 import streamlit as st
 
-from langchain.chains import RetrievalQA
-# from langchain.vectorstores import FAISS
+from langchain.chains import LLMChain, RetrievalQA
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import HuggingFacePipeline
 from langchain.document_loaders import TextLoader
-#from accelerate import Accelerator, notebook_launcher
+
+from langchain.schema.runnable import RunnablePassthrough
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.chains.question_answering import load_qa_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+
+from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline
+files = glob.glob('./harry_potter/*.txt')
 
 os.environ["OPENAI_API_KEY"] = st.secrets['OpenAI_API']
 os.environ["HF_AUTH_TOKEN"] = st.secrets['HF_TOKEN']
-
+model_name = 'meta-llama/Llama-2-7b-chat-hf'
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=bnb_config, device_map='auto')
 # accelerator = Accelerator()
 # device = accelerator.device
 # set_seed(42)
+text_generation_pipeline = pipeline(
+    model=model,
+    tokenizer=tokenizer,
+    task='text-generation',
+    temperature=0.2,
+    return_full_text=True,
+    max_new_tokens=500,
+)
+prompt_template = '''
+### [INST]
+Instruction: Answer the question based on your knowledge from the book.
+Here is context to help:
 
-files = glob.glob('./harry_potter/*.txt')
+{context}
+
+### Question
+{question}
+[/INST]
+'''
+
 
 model_name = 'BAAI/bge-small-en'
 model_kwargs = {'device': 'cpu'}
 encode_kwargs = {'normalize_embeddings': True}
+
+llama2 = HuggingFacePipeline(pipeline=text_generation_pipeline)
+
+prompt = PromptTemplate(
+    input_variables=["context", "question"],
+    template=prompt_template,
+)
+llm_chain = LLMChain(llm=llama2, prompt=prompt)
 
 hf = HuggingFaceBgeEmbeddings(
     model_name=model_name,
     model_kwargs=model_kwargs,
     encode_kwargs=encode_kwargs
 )
+
 
 tokenizer = tiktoken.get_encoding("cl100k_base")
 
@@ -96,15 +128,25 @@ def load_chunk_persist_text(path) -> Chroma:
 def load_persisted_chroma(directory: str) -> Chroma:
     vectordb = Chroma(persist_directory=directory, embedding_function=hf)
     return vectordb
-db = load_chunk_persist_text('./harry_potter')
-# db = load_persisted_chroma('./Harry_Potter_Chroma_DB')
+# db = load_chunk_persist_text('./harry_potter')
+db = load_persisted_chroma('./Harry_Potter_Chroma_DB')
 
-openai = ChatOpenAI(model_name='gpt-3.5-turbo',
-                    streaming=True, callbacks=[StreamingStdOutCallbackHandler()],
-                    temperature=0)
+# openai = ChatOpenAI(model_name='gpt-3.5-turbo',
+#                     streaming=True, callbacks=[StreamingStdOutCallbackHandler()],
+#                     temperature=0)
+
+retriever = db.as_retriever(
+    search_type='mmr',
+    search_kwargs={'k':3, 'fetch_k':10}
+)
+
+rag_chain = (
+    {'context': retriever, 'question':RunnablePassthrough()}
+    | llm_chain
+)
 
 qa = RetrievalQA.from_chain_type(
-    llm = openai,
+    llm = llama2,
     chain_type='stuff',
     retriever=db.as_retriever(
         search_type='mmr',
@@ -113,17 +155,18 @@ qa = RetrievalQA.from_chain_type(
     return_source_documents=True
     )
 
+
 def create_agent_chain():
-    model_name = "gpt-3.5-turbo"
-    llm = ChatOpenAI(model_name=model_name)
+    model_name = "meta-llama/Llama-2-7b-chat-hf"
+    llm = llama2
     chain = load_qa_chain(llm, chain_type="stuff")
     return chain
 
-def create_agent_chain():
-    model_name = "gpt-3.5-turbo"
-    llm = ChatOpenAI(model_name=model_name)
-    chain = load_qa_chain(llm, chain_type="stuff")
-    return chain
+# def create_agent_chain():
+#     model_name = "gpt-3.5-turbo"
+#     llm = ChatOpenAI(model_name=model_name)
+#     chain = load_qa_chain(llm, chain_type="stuff")
+#     return chain
 
 def get_llm_response(query):
     vectordb = load_persisted_chroma('./Harry_Potter_Chroma_DB')
