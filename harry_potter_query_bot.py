@@ -37,10 +37,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-
-openai_api_key = os.getenv('OpenAI_API')
-hf_auth_token = os.getenv('HF_TOKEN')
-
+os.environ["OPENAI_API_KEY"] = os.getenv('OpenAI_API')
+os.environ["HF_AUTH_TOKEN"] = os.getenv('HF_TOKEN')
 
 accelerator = Accelerator()
 device = accelerator.device
