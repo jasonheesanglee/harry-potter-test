@@ -5,6 +5,7 @@ pandas
 pydeck
 streamlit
 fastapi
+langchain-community
 uvicorn
 tiktoken
 kaleido
