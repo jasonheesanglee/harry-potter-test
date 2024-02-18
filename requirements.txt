@@ -1,4 +1,3 @@
-pysqlite3
 altair
 numpy < 2
 pandas
