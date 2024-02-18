@@ -1,3 +1,5 @@
+langchain
+
 langchain-community==0.0.20
 pysqlite3-binary
 altair
@@ -13,7 +15,6 @@ cohere
 openai
 torch
 python-multipart
-langchain
 transformers
 sentence-transformers
 accelerate
