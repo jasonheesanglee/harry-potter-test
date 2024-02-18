@@ -44,7 +44,7 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
 os.environ["OPENAI_API_KEY"] = st.secrets['OpenAI_API']
-os.environ["HF_AUTH_TOKEN"] = st.secrets('HF_TOKEN')
+os.environ["HF_AUTH_TOKEN"] = st.secrets['HF_TOKEN']
 
 # accelerator = Accelerator()
 # device = accelerator.device
