@@ -80,11 +80,11 @@ def load_chunk_persist_text(path) -> Chroma:
                                                    length_function=tiktoken_len
                                                    )
     chunked_documents = text_splitter.split_documents(documents)
-    client = chromadb.Client()
-    if client.list_collections():
-        consent_collection = client.create_collection("consent_collection")
-    else:
-        print("Collection already exists")
+    # client = chromadb.Client()
+    # if client.list_collections():
+    #     consent_collection = client.create_collection("consent_collection")
+    # else:
+    #     print("Collection already exists")
     vectordb = Chroma.from_documents(
         documents=chunked_documents,
         embedding=hf,
