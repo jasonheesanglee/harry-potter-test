@@ -29,7 +29,6 @@ import tiktoken
 import chromadb
 import streamlit as st
 
-#from accelerate.utils import set_seed
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import FAISS
 from langchain.vectorstores import Chroma
