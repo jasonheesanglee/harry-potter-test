@@ -49,16 +49,16 @@ files = glob.glob('./harry_potter/*.txt')
 os.environ["OPENAI_API_KEY"] = st.secrets['OpenAI_API']
 os.environ["HF_AUTH_TOKEN"] = st.secrets['HF_TOKEN']
 
-bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type='nf4',
-    bnb_4bit_compute_dtype=torch.bfloat16
-)
+# bnb_config = BitsAndBytesConfig(
+#     load_in_4bit=True,
+#     bnb_4bit_use_double_quant=True,
+#     bnb_4bit_quant_type='nf4',
+#     bnb_4bit_compute_dtype=torch.bfloat16
+# )
 
 model_name = 'meta-llama/Llama-2-7b-chat-hf'
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=bnb_config, device_map='auto')
+model = AutoModelForCausalLM.from_pretrained(model_name, device_map='auto')#quantization_config=bnb_config)
 # accelerator = Accelerator()
 # device = accelerator.device
 # set_seed(42)
