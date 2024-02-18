@@ -53,7 +53,7 @@ os.environ["HF_AUTH_TOKEN"] = st.secrets['HF_TOKEN']
 files = glob.glob('./harry_potter/*.txt')
 
 model_name = 'BAAI/bge-small-en'
-model_kwargs = {'device': 'auto'}
+model_kwargs = {'device': 'cpu'}
 encode_kwargs = {'normalize_embeddings': True}
 
 hf = HuggingFaceBgeEmbeddings(
