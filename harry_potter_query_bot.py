@@ -19,8 +19,11 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 import streamlit as st
 from streamlit.logger import get_logger
+import sqlite3
 
 LOGGER = get_logger(__name__)
+LOGGER.info(f'sqlite version: {sqlite3.sqlite_version}')
+LOGGER.info(f'sys version: {sys.version}')
 
 import os
 import glob
