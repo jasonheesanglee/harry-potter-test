@@ -1,5 +1,6 @@
+wqlite3 >= 3.35.0
 altair
-numpy
+numpy < 2
 pandas
 pydeck
 streamlit
