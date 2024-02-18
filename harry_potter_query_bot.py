@@ -62,8 +62,6 @@ def tiktoken_len(text):
     tokens = tokenizer.encode(text)
     return len(tokens)
 
-
-
 def load_chunk_persist_text(path) -> Chroma:
     documents = []
     for file in os.listdir(path):
@@ -84,7 +82,7 @@ def load_chunk_persist_text(path) -> Chroma:
     vectordb = Chroma.from_documents(
         documents=chunked_documents,
         embedding=hf,
-        persist_directory="/content/drive/MyDrive/Colab Notebooks/LangChain/harry_potter/",
+        persist_directory="./Harry_Potter_Chroma_DB",
     )
     vectordb.persist()
     return vectordb
@@ -93,7 +91,7 @@ def load_persisted_chroma(directory: str) -> Chroma:
     vectordb = Chroma(persist_directory=directory, embedding_function=hf)
     return vectordb
 
-db = load_persisted_chroma('/content/drive/MyDrive/Colab Notebooks/LangChain/harry_potter/Harry_Potter_Chroma_DB')
+db = load_persisted_chroma('./Harry_Potter_Chroma_DB')
 
 openai = ChatOpenAI(model_name='gpt-3.5-turbo',
                     streaming=True, callbacks=[StreamingStdOutCallbackHandler()],
@@ -122,14 +120,14 @@ def create_agent_chain():
     return chain
 
 def get_llm_response(query):
-    vectordb = load_persisted_chroma('/content/drive/MyDrive/Colab Notebooks/LangChain/harry_potter/Harry_Potter_Chroma_DB')
+    vectordb = load_persisted_chroma('./Harry_Potter_Chroma_DB')
     chain = create_agent_chain()
     matching_docs = vectordb.similarity_search(query)
     answer = chain.run(input_documents=matching_docs, question=query)
     return answer
 
 def run():
-    st.set_page_config(page_title="Harry Potter Searcher", page_icon=":robot:")
+    st.set_page_config(page_title="Harry Potter Searcher", page_icon=":dizzy:")
     st.header("Query Text Source")
 
     form_input = st.text_input('Type anything you want to know from the Harry Potter Series')
