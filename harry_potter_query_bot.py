@@ -11,6 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 import streamlit as st
 from streamlit.logger import get_logger
@@ -24,30 +27,30 @@ import tiktoken
 import chromadb
 import streamlit as st
 
-from accelerate.utils import set_seed
+#from accelerate.utils import set_seed
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import FAISS
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import TextLoader
-from accelerate import Accelerator, notebook_launcher
+#from accelerate import Accelerator, notebook_launcher
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.chains.question_answering import load_qa_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-os.environ["OPENAI_API_KEY"] = os.getenv('OpenAI_API')
-os.environ["HF_AUTH_TOKEN"] = os.getenv('HF_TOKEN')
+os.environ["OPENAI_API_KEY"] = st.secrets['OpenAI_API']
+os.environ["HF_AUTH_TOKEN"] = st.secrets('HF_TOKEN')
 
-accelerator = Accelerator()
-device = accelerator.device
-set_seed(42)
+# accelerator = Accelerator()
+# device = accelerator.device
+# set_seed(42)
 
 files = glob.glob('./harry_potter/*.txt')
 
 model_name = 'BAAI/bge-small-en'
-model_kwargs = {'device': 'cuda'}
+model_kwargs = {'device': 'auto'}
 encode_kwargs = {'normalize_embeddings': True}
 
 hf = HuggingFaceBgeEmbeddings(
