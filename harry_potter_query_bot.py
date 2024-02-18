@@ -38,6 +38,8 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
 
+openai_api_key = os.getenv('OpenAI_API')
+hf_auth_token = os.getenv('HF_TOKEN')
 
 
 accelerator = Accelerator()
