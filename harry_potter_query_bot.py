@@ -96,8 +96,8 @@ def load_chunk_persist_text(path) -> Chroma:
 def load_persisted_chroma(directory: str) -> Chroma:
     vectordb = Chroma(persist_directory=directory, embedding_function=hf)
     return vectordb
-
-db = load_persisted_chroma('./Harry_Potter_Chroma_DB')
+db = load_chunk_persist_text('./harry_potter')
+# db = load_persisted_chroma('./Harry_Potter_Chroma_DB')
 
 openai = ChatOpenAI(model_name='gpt-3.5-turbo',
                     streaming=True, callbacks=[StreamingStdOutCallbackHandler()],
