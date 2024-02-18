@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__import__('pysqlite3')
+__import__('pysqlite3-binary')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
@@ -22,8 +22,8 @@ from streamlit.logger import get_logger
 import sqlite3
 
 LOGGER = get_logger(__name__)
-LOGGER.info(f'sqlite version: {sqlite3.sqlite_version}')
-LOGGER.info(f'sys version: {sys.version}')
+# LOGGER.info(f'sqlite version: {sqlite3.sqlite_version}')
+# LOGGER.info(f'sys version: {sys.version}')
 
 import os
 import glob
