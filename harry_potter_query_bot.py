@@ -19,7 +19,6 @@
 
 import streamlit as st
 from streamlit.logger import get_logger
-import sqlite3
 
 LOGGER = get_logger(__name__)
 # LOGGER.info(f'sqlite version: {sqlite3.sqlite_version}')
