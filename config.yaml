@@ -8,7 +8,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
@@ -18,5 +18,5 @@ jobs:
     - name: Run script
       run: python harry_potter_query_bot.py
       env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        HF_AUTH_TOKEN: ${{ secrets.HF_AUTH_TOKEN }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API }}
+        HF_AUTH_TOKEN: ${{ secrets.HF_TOKEN }}
