@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__import__('pysqlite3-binary')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3-binary')
+# __import__('pysqlite3-binary')
+# import sys
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3-binary')
 
 
 import streamlit as st
