@@ -44,7 +44,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline
-files = glob.glob('./harry_potter/*.txt')
+files = glob.glob('../harry_potter/*.txt')
 
 os.environ["OPENAI_API_KEY"] = st.secrets['OpenAI_API']
 os.environ["HF_AUTH_TOKEN"] = st.secrets['HF_TOKEN']
@@ -128,7 +128,7 @@ def load_chunk_persist_text(path) -> Chroma:
     vectordb = Chroma.from_documents(
         documents=chunked_documents,
         embedding=hf,
-        persist_directory="./Harry_Potter_Chroma_DB",
+        persist_directory="../Harry_Potter_Chroma_DB",
     )
     vectordb.persist()
     return vectordb
@@ -137,7 +137,7 @@ def load_persisted_chroma(directory: str) -> Chroma:
     vectordb = Chroma(persist_directory=directory, embedding_function=hf)
     return vectordb
 # db = load_chunk_persist_text('./harry_potter')
-db = load_persisted_chroma('./Harry_Potter_Chroma_DB')
+db = load_persisted_chroma('../Harry_Potter_Chroma_DB')
 
 # openai = ChatOpenAI(model_name='gpt-3.5-turbo',
 #                     streaming=True, callbacks=[StreamingStdOutCallbackHandler()],
@@ -177,7 +177,7 @@ def create_agent_chain():
 #     return chain
 
 def get_llm_response(query):
-    vectordb = load_persisted_chroma('./Harry_Potter_Chroma_DB')
+    vectordb = load_persisted_chroma('../Harry_Potter_Chroma_DB')
     chain = create_agent_chain()
     matching_docs = vectordb.similarity_search(query)
     answer = chain.run(input_documents=matching_docs, question=query)
