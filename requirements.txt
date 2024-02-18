@@ -1,3 +1,4 @@
+-U langchain-community
 pysqlite3-binary
 altair
 numpy < 2
